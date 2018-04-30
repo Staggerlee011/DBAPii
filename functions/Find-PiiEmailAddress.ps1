@@ -35,12 +35,12 @@ License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 
 
 .EXAMPLE
-Find-EmailAddress -SqlInstance localhost -Database myDB -SearchRows 10
+Find-PiiEmailAddress -SqlInstance localhost -Database myDB
 Returns any tables columns with email addresses found in the top 10 rows of the search for the localhost myDB database.
 
 .EXAMPLE
 $it = "dbo.tbl1","dbo.tbl2","dbo.tbl3",
-Find-EmailAddress -SqlInstance localhost -Database myDB, myDB2 -SearchRows 10 -IgnoreTable $it
+Find-PiiEmailAddress -SqlInstance localhost -Database myDB, myDB2 -SearchRows 10 -IgnoreTable $it
 Returns any tables columns with email addresses found in the top 10 rows of the search. looking at both mydb and mydb2 databases and ignore the tables in $it array 
 
 #>
