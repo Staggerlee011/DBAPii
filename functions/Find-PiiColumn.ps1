@@ -22,6 +22,8 @@ The database(s) to exclude - this list is auto-populated from the server
 .PARAMETER Contains
 String or array of text to search through all columns in database(s) 
 
+.PARAMETER WildCardSearch
+STring or array for text to do wildcard searches
 .NOTES
 Author: Stephen Bennett
 
@@ -32,7 +34,7 @@ License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 
 .EXAMPLE
 $pii = "email", "firstname", "surname"
-Find-DbaColumn -SqlInstance DEV01 -Contains $pii
+Find-PiiColumn -SqlInstance DEV01 -Contains $pii
 Searches all user databases and returns any columns with email, firstname or surname
 
 #>
