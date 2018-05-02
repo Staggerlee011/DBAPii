@@ -26,7 +26,7 @@ Used for the SELECT TOP command ran against each row.
 Array to ignore tables from the search, can help speed up things, or stop you getting notified of emails in columns if its known false postive.
 
 .NOTES
-Author: Stephen Bennett 
+Author: Stephen Bennett
 
 Website: https://sqlnotesfromtheunderground.wordpress.com/
 License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
@@ -41,7 +41,7 @@ Returns any tables columns with email addresses found in the top 10 rows of the 
 .EXAMPLE
 $it = "dbo.tbl1","dbo.tbl2","dbo.tbl3",
 Find-PiiEmailAddress -SqlInstance localhost -Database myDB, myDB2 -SearchRows 10 -IgnoreTable $it
-Returns any tables columns with email addresses found in the top 10 rows of the search. looking at both mydb and mydb2 databases and ignore the tables in $it array 
+Returns any tables columns with email addresses found in the top 10 rows of the search. looking at both mydb and mydb2 databases and ignore the tables in $it array
 
 #>
 
@@ -58,7 +58,6 @@ Returns any tables columns with email addresses found in the top 10 rows of the 
         [string[]]$ignoreTable
     )
     begin {
-        $output = @()
         try {
             #$server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $SqlCredential -MinimumVersion 9
             Write-Verbose "connecting to SQL Server instance: $SqlInstance"
@@ -94,12 +93,12 @@ Returns any tables columns with email addresses found in the top 10 rows of the 
                 } else {
                     $tblsWithRows = $Tables | Where-object {$_.RowCount -gt 0}
                 }
-                
+
                 foreach ($tbl in $tblsWithRows){
                     Write-Verbose "reading from table: $($tbl.Schema).$($tbl.Name)"
-                    #$query = $server.databases[$db.Name].ExecuteWithResults("SELECT TOP ($SearchRows) * FROM $($tbl.Schema).$($tbl.Name)")             
+                    #$query = $server.databases[$db.Name].ExecuteWithResults("SELECT TOP ($SearchRows) * FROM $($tbl.Schema).$($tbl.Name)")
                     try {
-                        $query = $server.Databases[$db.NAme].executeWithResults("SELECT TOP ($SearchRows) * FROM $($tbl.Schema).$($tbl.Name)").Tables[0].Rows 
+                        $query = $server.Databases[$db.NAme].executeWithResults("SELECT TOP ($SearchRows) * FROM $($tbl.Schema).$($tbl.Name)").Tables[0].Rows
                     }
                     catch {
                         Write-Warning "Failed to connect or get results from: $($tbl.Schema).$($tbl.Name)"
@@ -109,22 +108,18 @@ Returns any tables columns with email addresses found in the top 10 rows of the 
                             $prop = $_.Name
                             $search = $query.$prop
                             if((Select-String -InputObject $search -Pattern '\w+@\w+\.\w+' -AllMatches).Matches){
-                                $object = [PSCustomObject]@{
+                                [PSCustomObject]@{
                                     Database = $db
                                     Schema = $tbl.Schema
                                     Table = $tbl.Name
                                     Column = $prop
                                     Example = $search
                                 }
-                                $output+= $object
-                                }
+                            }
                         }
                     }
                 } # FOREACH
             }
     } # process end
-    end {
-        $output
-    }
 } # function end
 
